@@ -949,7 +949,12 @@ class Species(MSONable, Stringify):
         else:
             self._oxi_state = oxidation_state
 
-        self._el = Element(symbol)
+        if isinstance(symbol, (int, float)):
+            if symbol != int(symbol):
+                raise ValueError(f"{symbol=} must be an integer atomic number or a string")
+            self._el = Element.from_Z(int(symbol))
+        else:
+            self._el = Element(symbol)
 
         self._spin = spin
 

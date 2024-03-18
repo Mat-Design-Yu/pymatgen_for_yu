@@ -378,6 +378,10 @@ class TestSpecies(PymatgenTest):
         assert Species("Fe", 2, spin=2) == Species("Fe2+", spin=2)
         assert Species("O2-") == Species("O", -2)
         assert Species("O0+", spin=2) == Species("O", 0, spin=2)
+        assert Species(1) == Species("H")
+        assert Species(2.0) == Species("He")
+        with pytest.raises(ValueError, match="symbol=2.5 must be an integer atomic number or a string"):
+            assert Species(2.5)
 
     def test_ionic_radius(self):
         assert self.specie2.ionic_radius == 78.5 / 100

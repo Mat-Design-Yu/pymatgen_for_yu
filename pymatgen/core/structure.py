@@ -3807,15 +3807,15 @@ class Structure(IStructure, collections.abc.MutableSequence):
             creates a disordered structure!
         """
         if isinstance(idx, int):
-            indices = [idx]
+            indices: list[int] = [idx]
         elif isinstance(idx, (str, Element, Species)):
             self.replace_species({idx: site})  # type: ignore
             return
         elif isinstance(idx, slice):
             to_mod = self[idx]
-            indices = [ii for ii, site in enumerate(self) if site in to_mod]
+            indices = [idx for idx, site in enumerate(self) if site in to_mod]
         else:
-            indices = list(idx)
+            indices = list(idx)  # type: ignore[arg-type]
 
         for ii in indices:
             if isinstance(site, PeriodicSite):
@@ -4558,7 +4558,7 @@ class Molecule(IMolecule, collections.abc.MutableSequence):
             charge_spin_check=charge_spin_check,
             properties=properties,
         )
-        self._sites: list[Site] = list(self._sites)  # type: ignore
+        self._sites: list[Site] = list(self._sites)
 
     def __setitem__(  # type: ignore
         self, idx: int | slice | Sequence[int] | SpeciesLike, site: SpeciesLike | Site | Sequence
@@ -4575,7 +4575,7 @@ class Molecule(IMolecule, collections.abc.MutableSequence):
                 coords) sequence, e.g., ("Fe", [0.5, 0.5, 0.5]).
         """
         if isinstance(idx, int):
-            indices = [idx]
+            indices: list[int] = [idx]
         elif isinstance(idx, (str, Element, Species)):
             self.replace_species({idx: site})  # type: ignore
             return
@@ -4583,7 +4583,7 @@ class Molecule(IMolecule, collections.abc.MutableSequence):
             to_mod = self[idx]
             indices = [idx for idx, site in enumerate(self._sites) if site in to_mod]
         else:
-            indices = list(idx)
+            indices = list(idx)  # type: ignore[arg-type]
 
         for ii in indices:
             if isinstance(site, Site):

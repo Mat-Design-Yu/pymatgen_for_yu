@@ -21,10 +21,10 @@ if TYPE_CHECKING:  # needed to avoid circular imports
 PathLike = Union[str, Path]
 
 # Things that can be cast to a Species-like object using get_el_sp
-SpeciesLike = Union[str, Element, Species, DummySpecies]
+SpeciesLike = Union[int, float, str, Element, Species, DummySpecies]
 
 # Things that can be cast to a Composition
-CompositionLike = Union[str, Element, Species, DummySpecies, dict, Composition]
+CompositionLike = Union[int, float, str, Element, Species, DummySpecies, dict, Composition]
 
 # Entry or any of its subclasses or dicts that can be unpacked into any of them
 EntryLike = Union[

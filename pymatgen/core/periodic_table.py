@@ -1419,7 +1419,7 @@ class DummySpecie(DummySpecies):
 
 
 @functools.lru_cache
-def get_el_sp(obj: int | SpeciesLike) -> Element | Species | DummySpecies:
+def get_el_sp(obj: SpeciesLike) -> Element | Species | DummySpecies:
     """Utility method to get an Element, Species or DummySpecies from any input.
 
     If obj is in itself an element or a specie, it is returned automatically.
@@ -1448,10 +1448,9 @@ def get_el_sp(obj: int | SpeciesLike) -> Element | Species | DummySpecies:
 
     try:
         flt = float(obj)
-        integer = int(flt)
-        integer = integer if integer == flt else None  # type: ignore
-        return Element.from_Z(integer)
-    except (ValueError, TypeError):
+        assert flt == int(flt)
+        return Element.from_Z(int(flt))
+    except (AssertionError, ValueError):
         pass
 
     try:

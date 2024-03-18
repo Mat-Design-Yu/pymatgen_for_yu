@@ -37,13 +37,13 @@ def test_entry_like():
 
 
 def test_species_like():
-    assert _type_str(SpeciesLike) == "Union[str, Element, Species, DummySpecies]"
+    assert _type_str(SpeciesLike) == "Union[int, float, str, Element, Species, DummySpecies]"
 
 
 def test_composition_like():
     assert (
         _type_str(CompositionLike)
-        == "Union[str, Element, Species, DummySpecies, dict, pymatgen.core.composition.Composition]"
+        == "Union[int, float, str, Element, Species, DummySpecies, dict, pymatgen.core.composition.Composition]"
     )
 
 

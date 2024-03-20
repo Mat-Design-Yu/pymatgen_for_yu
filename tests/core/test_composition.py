@@ -141,9 +141,10 @@ class TestComposition(PymatgenTest):
         comp = Composition({"S": Composition.amount_tolerance / 2})
         assert len(comp.elements) == 0
 
-        # test from int/float
-        assert Composition(1) == Composition("H")
-        assert Composition(2.0) == Composition("He")
+        # test Composition from int/float raises
+        for val in (1, 2.5):
+            with pytest.raises(ValueError, match=f"Can't parse Element or Species from {val}"):
+                Composition(val)
 
     def test_str_and_repr(self):
         test_cases = [
@@ -164,16 +165,7 @@ class TestComposition(PymatgenTest):
             assert repr(Composition(comp)) == expected["repr"]
 
     def test_average_electroneg(self):
-        electro_negs = (
-            2.7224999999999997,
-            2.4160000000000004,
-            2.5485714285714285,
-            2.21,
-            2.718,
-            3.08,
-            1.21,
-            2.43,
-        )
+        electro_negs = (2.722499, 2.416000, 2.548571, 2.21, 2.718, 3.08, 1.21, 2.43)
         for elem, val in zip(self.comps, electro_negs):
             assert elem.average_electroneg == approx(val)
 

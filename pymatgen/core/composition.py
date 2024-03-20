@@ -118,12 +118,9 @@ class Composition(collections.abc.Hashable, collections.abc.Mapping, MSONable, S
         """
         # allow_negative must be popped from **kwargs due to *args ambiguity
         self.allow_negative = kwargs.pop("allow_negative", False)
-        if len(args) == 1 and isinstance(args[0], (int, float)):
-            # treat single integer/float as atomic number
-            elem_map = {get_el_sp(args[0]): 1}
         # it's much faster to recognize a composition and use the el_map than
         # to pass the composition to {}
-        elif len(args) == 1 and isinstance(args[0], Composition):
+        if len(args) == 1 and isinstance(args[0], Composition):
             elem_map = args[0]
         elif len(args) == 1 and isinstance(args[0], str):
             elem_map = self._parse_formula(args[0])  # type: ignore[assignment]

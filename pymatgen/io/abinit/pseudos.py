@@ -35,6 +35,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
 
     import matplotlib.pyplot as plt
+    from typing_extensions import Self
 
     from pymatgen.core import Structure
 
@@ -262,7 +263,7 @@ class Pseudo(MSONable, abc.ABC):
         }
 
     @classmethod
-    def from_dict(cls, dct):
+    def from_dict(cls, dct: dict) -> Self:
         """Build instance from dictionary (MSONable protocol)."""
         new = cls.from_file(dct["filepath"])
 
@@ -583,9 +584,9 @@ class Hint:
         }
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, dct: dict) -> Self:
         """Build instance from dictionary (MSONable protocol)."""
-        return cls(**{k: v for k, v in d.items() if not k.startswith("@")})
+        return cls(**{k: v for k, v in dct.items() if not k.startswith("@")})
 
 
 def _dict_from_lines(lines, key_nums, sep=None):
@@ -998,8 +999,7 @@ class PseudoParser:
     """
     Responsible for parsing pseudopotential files and returning pseudopotential objects.
 
-    Usage::
-
+    Usage:
         pseudo = PseudoParser().parse("filename")
     """
 
@@ -1555,7 +1555,8 @@ class PseudoTable(collections.abc.Sequence, MSONable):
                     we try to open all files in top
             exclude_dirs: Wildcard used to exclude directories.
 
-        return: PseudoTable sorted by atomic number Z.
+        Returns:
+            PseudoTable sorted by atomic number Z.
         """
         pseudos = []
 
@@ -1679,13 +1680,12 @@ class PseudoTable(collections.abc.Sequence, MSONable):
         return dct
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, dct: dict) -> Self:
         """Build instance from dictionary (MSONable protocol)."""
         pseudos = []
-        dec = MontyDecoder()
-        for k, v in d.items():
+        for k, v in dct.items():
             if not k.startswith("@"):
-                pseudos.append(dec.process_decoded(v))
+                pseudos.append(MontyDecoder().process_decoded(v))
         return cls(pseudos)
 
     def is_complete(self, zmax=118) -> bool:
@@ -1698,8 +1698,7 @@ class PseudoTable(collections.abc.Sequence, MSONable):
         for the given list of element_symbols.
         Each item is a list of pseudopotential objects.
 
-        Example::
-
+        Example:
             table.all_combinations_for_elements(["Li", "F"])
         """
         dct = {}
@@ -1827,8 +1826,8 @@ class PseudoTable(collections.abc.Sequence, MSONable):
         """
         Sort the table according to the value of attribute attrname.
 
-        Return:
-            New class:`PseudoTable` object
+        Returns:
+            New class: `PseudoTable` object
         """
         attrs = []
         for i, pseudo in self:

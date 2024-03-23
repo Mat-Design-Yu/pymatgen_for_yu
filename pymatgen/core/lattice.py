@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
 
     from numpy.typing import ArrayLike
+    from typing_extensions import Self
 
     from pymatgen.core.trajectory import Vector3D
 
@@ -362,7 +363,7 @@ class Lattice(MSONable):
         return Lattice([vector_a, vector_b, vector_c], pbc)
 
     @classmethod
-    def from_dict(cls, dct: dict, fmt: str | None = None, **kwargs):
+    def from_dict(cls, dct: dict, fmt: str | None = None, **kwargs) -> Self:
         """Create a Lattice from a dictionary containing the a, b, c, alpha, beta,
         and gamma parameters if fmt is None.
 
@@ -884,7 +885,7 @@ class Lattice(MSONable):
             None is returned if no matches are found.
         """
         lengths = other_lattice.lengths
-        (alpha, beta, gamma) = other_lattice.angles
+        alpha, beta, gamma = other_lattice.angles
 
         frac, dist, _, _ = self.get_points_in_sphere(  # type: ignore[misc]
             [[0, 0, 0]], [0, 0, 0], max(lengths) * (1 + ltol), zip_results=False
@@ -958,7 +959,9 @@ class Lattice(MSONable):
         return next(self.find_all_mappings(other_lattice, ltol, atol, skip_rotation_matrix), None)
 
     def get_lll_reduced_lattice(self, delta: float = 0.75) -> Lattice:
-        """:param delta: Delta parameter.
+        """
+        Args:
+            delta: Delta parameter.
 
         Returns:
             LLL reduced Lattice.
@@ -1509,8 +1512,10 @@ class Lattice(MSONable):
         return np.sqrt(d2)
 
     def is_hexagonal(self, hex_angle_tol: float = 5, hex_length_tol: float = 0.01) -> bool:
-        """:param hex_angle_tol: Angle tolerance
-        :param hex_length_tol: Length tolerance
+        """
+        Args:
+            hex_angle_tol: Angle tolerance
+            hex_length_tol: Length tolerance.
 
         Returns:
             Whether lattice corresponds to hexagonal lattice.

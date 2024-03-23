@@ -407,7 +407,7 @@ class NearNeighbors:
 
         Args:
             structure (Structure): Input structure
-        Return:
+        Returns:
             List of NN site information for each site in the structure. Each
                 entry has the same format as `get_nn_info`
         """
@@ -623,11 +623,13 @@ class NearNeighbors:
             order_parameters = [self.get_local_order_parameters(structure, n) for n in range(len(structure))]
             structure.add_site_property("order_parameters", order_parameters)
 
-        sg = StructureGraph.with_local_env_strategy(structure, self, weights=weights, edge_properties=edge_properties)
+        struct_graph = StructureGraph.with_local_env_strategy(
+            structure, self, weights=weights, edge_properties=edge_properties
+        )
 
         # sets the attributes
-        sg.set_node_attributes()
-        return sg
+        struct_graph.set_node_attributes()
+        return struct_graph
 
     def get_local_order_parameters(self, structure: Structure, n: int):
         """
@@ -1612,8 +1614,9 @@ class CovalentBondNN(NearNeighbors):
         Get all near-neighbor sites and weights (orders) of bonds for a given
         atom.
 
-        :param structure: input Molecule.
-        :param n: index of site for which to determine near neighbors.
+        Args:
+            structure: input Molecule.
+            n: index of site for which to determine near neighbors.
 
         Returns:
             [dict] representing a neighboring site and the type of
@@ -3410,9 +3413,8 @@ class BrunnerNN_reciprocal(NearNeighbors):
             n (int): index of site for which to determine near-neighbor sites.
 
         Returns:
-            siw (list of tuples (Site, array, float)): tuples, each one
-                of which represents a coordinated site, its image location,
-                and its weight.
+            list[tuples[Site, array, float]]: tuples, each one of which represents a
+                coordinated site, its image location, and its weight.
         """
         site = structure[n]
         neighs_dists = structure.get_neighbors(site, self.cutoff)
@@ -3423,17 +3425,17 @@ class BrunnerNN_reciprocal(NearNeighbors):
         d_max = ds[ns.index(max(ns))]
         siw = []
         for nn in neighs_dists:
-            s, dist = nn, nn.nn_distance
+            site, dist = nn, nn.nn_distance
             if dist < d_max + self.tol:
                 w = ds[0] / dist
-                siw.append(
+                siw += [
                     {
-                        "site": s,
-                        "image": self._get_image(structure, s),
+                        "site": site,
+                        "image": self._get_image(structure, site),
                         "weight": w,
-                        "site_index": self._get_original_site(structure, s),
+                        "site_index": self._get_original_site(structure, site),
                     }
-                )
+                ]
         return siw
 
 
